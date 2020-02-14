@@ -42,9 +42,10 @@ author_az.each do |letter|
   end
 end
 
-def get_quotes_by_author(author)
-  look_up_author = Author.all.find{|name| name == Author.name}
-  quote_page = Nokogiri::HTML(open(look_up_author.page))
+
+scribe = Author.all.find{|a|  a.name == "Adelina Sotnikova"}
+page = Nokogiri::HTML(open(scribe.page))
+binding.pry
   
 
   

@@ -1,0 +1,16 @@
+#cli greets user
+
+#cli tells scraper class to scrape and create author objects
+
+#cli talks to author class to get those objects and list authors
+
+#cli gets input to select 1 author to see more
+
+#cli talks to either the scraper and passes it that author instance (scraper should check the author to see if it already has quotes)so the scraper can get quotes for it and update it with those
+# OR cli calls an instance method on the author, telling it to get the updates. author will have an instance method that talks
+# to the scraper (only if it doesn't have quotes) and gets quotes to update itself from the scraper info
+
+
+#cli displays info about the author
+
+#menu options

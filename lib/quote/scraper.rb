@@ -15,9 +15,9 @@ author_az.to_a
 num = 2..19
 num.to_a
 puts "please wait while we gather the information."
-author_az.each do |letter|
-  puts "Gathering letter #{letter}."
-  scrape_page = base_html + "/authors/#{letter}"
+# author_az.each do |letter|
+  puts "Gathering letter a."
+  scrape_page = base_html + "/authors/a"
   page1 = Nokogiri::HTML(open(scrape_page))
   num_pages = page1.css('li a')[-5].text
   num_pages = num_pages.to_i 

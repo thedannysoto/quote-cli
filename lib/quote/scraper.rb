@@ -4,18 +4,15 @@ require 'pry'
 
 require_relative './authors.rb'
 require_relative './quotes.rb'
-require_relative './processing'
+require_relative './catagories.rb'
 
 author_pages = []
 names = []
 occupations = []
 
-puts "please wait while we gather the information."
+
 def author_look_up_by_letter(letter)
-  letter = letter.downcase!
   base_html = "https://www.brainyquote.com"
-  author_az = "a".."z"
-  author_az.to_a
   puts "Gathering letter #{letter}."
   scrape_page = base_html + "/authors/#{letter}"
   page1 = Nokogiri::HTML(open(scrape_page))
@@ -73,15 +70,16 @@ end
 def quotes_by_author(author)
   scribe = Author.all.find{|a|  a.name == author}
   page = Nokogiri::HTML(open(scribe.page))
-  page.css('.m-brick').each |block|
-  quote1 = block.css('a').text 
-  quote = Quote.new(quote1)
-  quote.
+  
+  return page  
+  
 end
 
-author_look_up_by_letter("j")
-arr = author_info("J. K. Rowling")
+author_look_up_by_letter("a")
+a = quotes_by_author("Aesop")
+
 binding.pry
+
   
 
   

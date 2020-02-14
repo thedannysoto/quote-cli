@@ -6,7 +6,7 @@ end
 
 
 group :production do 
-  gem 'nokogiri', :git => 'git@github.com:sparklemotion/nokogiri.git'
+  gem 'nokogiri'
 end
 # Specify your gem's dependencies in quote-cli.gemspec
 gemspec

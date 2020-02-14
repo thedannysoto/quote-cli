@@ -30,7 +30,7 @@ puts "please wait while we gather the information."
   end
   num = 2..num_pages
   num.each do |num|
-    scrape_page = base_html + "/authors/#{letter}#{num}"
+    scrape_page = base_html + "/authors/a#{num}"
     page = Nokogiri::HTML(open(scrape_page))
     page.css('tbody tr').each do |item|
       name = item.css('a').text
@@ -40,7 +40,6 @@ puts "please wait while we gather the information."
       author.occupation = item.css('td')[1].text.strip!
     end
   end
-end
 
 
 scribe = Author.all.find{|a|  a.name == "Adelina Sotnikova"}

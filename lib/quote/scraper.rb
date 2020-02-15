@@ -78,10 +78,27 @@ def quotes_by_author(author)
     block.css('.qll-bg').css('.kw-box').css('a').each do |c|
       cat = c.text
       category << cat
+    end
+    
+    quote.categories = category
+  end 
+end
+
+def quotes_by_topic(topic)
+  topic_page = "http://brainyquote.com/topics/#{topic}-quotes"
+  page = Nokogiri::HTML(open(topic_page))
+  page.css('.m-brick').each do |block|
+    category = []
+    quote = Quote.new(block.css('a')[0].text)
+    quote.author = block.css('a')[1].text 
+    block.css('.qll-bg').css('.kw-box').css('a').each do |c|
+      cat = c.text
+      category << cat
     end 
     quote.categories = category
   end 
 end
+  
 
 author_look_up_by_letter("a")
 a = quotes_by_author("Alexandria Ocasio-Cortez")

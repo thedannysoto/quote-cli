@@ -70,7 +70,15 @@ end
 def quotes_by_author(author)
   scribe = Author.all.find{|a|  a.name == author}
   page = Nokogiri::HTML(open(scribe.page))
-  
+  page.css('.m-brick').each do |block|
+    category = []
+    quote1 = block.css('a')[0].text
+    quote = Quote.new(quote1)
+    quote.author = scribe
+    s = block.css('a').text
+    s_arr = s.scan(/[A-Z][a-z]+/)
+    s_arr
+    binding.pry
   return page  
   
 end
@@ -78,7 +86,6 @@ end
 author_look_up_by_letter("a")
 a = quotes_by_author("Aesop")
 
-binding.pry
 
   
 

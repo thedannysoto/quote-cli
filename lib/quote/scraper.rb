@@ -75,15 +75,43 @@ def quotes_by_author(author)
     quote1 = block.css('a')[0].text
     quote = Quote.new(quote1)
     quote.author = scribe
+    quote_arr_count = quote1.gsub(/\n|\r/, ' ').split(/\.\s*/).count
     author_arr_count = scribe.name.split(' ').count
+    q_a_total = quote_arr_count + author_arr_count
     s = block.css('a').text
     s_arr = s.scan(/[A-Z][a-z]+/)
-    binding.pry
+    if q_a_total == 1
+      s_arr.drop(2).each{|c| category << c}
+    elsif q_a_total == 2 
+      s_arr.drop(3).each{|c| category << c}
+    elsif q_a_total == 3
+      s_arr.drop(4).each{|c| category << c}
+    elsif q_a_total == 4
+      s_arr.drop(5).each{|c| category << c}
+    elsif q_a_total == 5 
+      s_arr.drop(6).each{|c| category << c}
+    elsif q_a_total == 6
+      s_arr.drop(7).each{|c| category << c}
+    elsif q_a_total == 7
+      s_arr.drop(8).each{|c| category << c}
+    elsif q_a_total == 8
+      s_arr.drop(9).each{|c| category << c}
+    elsif q_a_total == 9
+      s_arr.drop(10).each{|c| category << c}
+    elsif q_a_total == 10
+      s_arr.drop(11).each{|c| category << c}
+    elsif q_a_total == 11
+      s_arr.drop(12).each{|c| category << c}
+    elsif q_a_total == 12
+      s_arr.drop(13).each{|c| category << c}
+    end
+    quote.categories = category
   end
 end
 
 author_look_up_by_letter("a")
-a = quotes_by_author("Aesop")
+a = quotes_by_author("Alexandria Ocasio-Cortez")
+binding.pry
 
 
   

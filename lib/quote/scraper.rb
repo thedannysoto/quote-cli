@@ -2,15 +2,14 @@ require 'nokogiri'
 require 'open-uri'
 require 'pry'
 
-require_relative './authors.rb'
 require_relative './quotes.rb'
 require_relative './categories.rb'
-require_relative './scraper.rb'
+require_relative './authors.rb'
 
 
 class Scraper
 
-  def self.get_author_by_letter(letter)
+  def self.scrape_author_by_letter(letter)
     base_html = "https://www.brainyquote.com"
     puts "Gathering letter #{letter}."
     scrape_page = base_html + "/authors/#{letter}"
@@ -19,10 +18,12 @@ class Scraper
     num_pages = num_pages.to_i 
     page1.css('tbody tr').each do |item|
       name = item.css('a').text
-      author = Author.new(name)
+      if Author.all.include?(name) == false 
+        author = Author.new(name)
+        author.name = name
+      end 
       href = item.css('a').attr('href').value
       author.page = base_html + href
-      author.occupation = item.css('td')[1].text.strip!
     end
     num = 2..num_pages
     num.each do |num|
@@ -30,14 +31,17 @@ class Scraper
       page = Nokogiri::HTML(open(scrape_page))
       page.css('tbody tr').each do |item|
         name = item.css('a').text
+        if Author.all.include?(name) == false 
         author = Author.new(name)
+        author.name = name
+      end
         href = item.css('a').attr('href').value
         author.page = base_html + href
       end
     end
   end
 
-  def self.get_author_info(author)
+  def self.scrape_author_info(author)
     scribe = Author.all.find{|a|  a.name == author}
     page = Nokogiri::HTML(open(scribe.page))
     author_info = page.css('.subnav-below-p').text
@@ -61,83 +65,102 @@ class Scraper
       scribe.birth_date = b_day
       d_day = "#{auth_arr[7]} #{auth_arr[8]}, #{auth_arr[9]}"
       scribe.death_date = d_day
-    else
-      puts "You screwed up Chris fix it."
     end
   end
 
-  def self.get_quotes_by_author(author)
+  def self.scrape_quotes_by_author(author)
+    category = []
+    category_temp = []
     scribe = Author.all.find{|a|  a.name == author}
     page = Nokogiri::HTML(open(scribe.page))
-    quote_arr = []
     page.css('.m-brick').each do |block|
-      quote_temp= []
-      category = []
       quote1 = block.css('a')[0].text
-      Quote.search_quotes(quote1)
-      quote_temp << quote1
+      if @@quotes_all.include?(quote) == false 
+        quote = Quote.new(quote)
+      end 
       author1 = block.css('a')[1].text
-      Author.search_authors(author1)
-      quote_temp << author1
+      if @@all_authors.include?(author1) == false 
+        author = Author.new(author1)
+        quote.name = author
+      else
+        quote.name = Author.find(author1)
+      end
       block.css('.kw-box').css('a').each do |c|
         cat = c.text
-        category << cat
-      end
-      Category.search_categories(category)
-      quote_temp << category
-      quote_arr << quote_temp
+        category_temp << cat
+        category_temp.each do |topic|
+         category << Category.search_categories(topic)
+        end
+      quote.categories = category
     end
-    quote_arr 
   end
 
-  def self.get_quotes_by_topic(topic)
-    quote_arr = []
+  def self.scrape_quotes_by_topic(topic)
     topic_page = "http://brainyquote.com/topics/#{topic}-quotes"
     page = Nokogiri::HTML(open(topic_page))
     page.css('.m-brick').each do |block|
       quote_temp= []
-      category = []
+      category_temp = []
       quote1 = block.css('a')[0].text
-      Quote.search_quotes(quote1)
-      quote_temp << quote1
+      if @@quotes_all.include?(quote) == false 
+        quote = Quote.new(quote)
+        quote_temp << quote
+      else
+        quote_temp << Quote.find(quote1)
+      end 
       author1 = block.css('a')[1].text
-      Author.search_authors(author1)
-      quote_temp << author1
-      block.css('.kw-box').css('a').each do |c|
-        cat = c.text
-        category << cat
+      if @@all_authors.include?(author1) == false 
+        author = Author.new(author1)
+        quote.name = author
+      else
+        quote.name = Author.find(author1)
       end
-      Category.search_categories(category)
-      quote_temp << category
-      quote_arr << quote_temp
+      block.css('.kw-box').css('a').each do |c|
+        category = []
+        cat = c.text
+        category_temp << cat
+        category_temp.each do |topic|
+         category << Category.search_categories(topic)
+        end
+      quote.categories = category  
+      end
     end
-    quote_arr
   end
   
-  def self.Get_top_topics
-    top_topics_arr = []
+  def self.scrape_top_topics
+    top_topics = []
+    top_topics_temp = []
     topic_page = "http://www.brainyquote.com/topics"
     page = Nokogiri::HTML(open(topic_page))
     page.css('.bqLn').css('a').each do |f|
-      top_topics_arr << f.text.strip!
+      top_topics_temp << f.text.strip!
     end
-    top_topics_arr.delete(nil)
-    Category.search_categories(top_topics_arr)
-    top_topics_arr
+    top_topics_temp.delete(nil)
+    top_topics_temp.each do |topic|
+      top_topics << Category.search_categories(topic)
+    end
+    top_topics
+  end
   end 
   
-  def self.get_top_authors
-    top_authors_arr = []
+  def self.scrape_top_authors
+    top_authors = []
+    top_authors_temp = []
     author_page = "http://www.brainyquote.com/authors"
     page = Nokogiri::HTML(open(author_page))
     page.css(".authorContentName").each do |f|
-      top_authors_arr << f.text
+      top_authors_temp << f.text
     end
-    top_authors_arr.delete(nil)
-    Author.search_authors(top_authors_arr)
-    top_authors_arr
+    top_authors_temp.delete(nil)
+    top_authors_temp.each do |author|
+      top_authors << Author.search_authors(author)
+    end
+    top_authors
   end
 end 
+
+
+a = Author.get_authors_by_letter("a")
 
 
 

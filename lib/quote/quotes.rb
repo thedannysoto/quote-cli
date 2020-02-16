@@ -12,4 +12,14 @@ class Quote
     @@quotes_all
   end
   
+  def self.find_quote(quote)
+    @@quotes_all.select{|a| a.quote == quote}
+  end
+  
+  def self.search_quotes(quote)
+      if @@quotes_all.include?(quote) == false 
+        quote = Quote.new(quote)
+      end
+  end
+  
 end

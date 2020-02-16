@@ -1,8 +1,13 @@
-require "quote/cli/version"
+require 'pry'
 
-module Quote
-  module Cli
-    class Error < StandardError; end
-    # Your code goes here...
-  end
+require_relative './authors.rb'
+require_relative './quotes.rb'
+require_relative './categories.rb'
+require_relative 'scraper.rb'
+
+class cli 
+  def self.print_with_index do
 end
+
+
+

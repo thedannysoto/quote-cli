@@ -4,7 +4,8 @@ require 'pry'
 
 require_relative './authors.rb'
 require_relative './quotes.rb'
-require_relative './catagories.rb'
+require_relative './categories.rb'
+require_relative './scraper.rb'
 
 
 class Scraper
@@ -124,11 +125,23 @@ class Scraper
     Category.search_categories(top_topics_arr)
     top_topics_arr
   end 
-    
+  
+  def self.get_top_authors
+    top_authors_arr = []
+    author_page = "http://www.brainyquote.com/authors"
+    page = Nokogiri::HTML(open(author_page))
+    page.css(".authorContentName").each do |f|
+      top_authors_arr << f.text
+    end
+    top_authors_arr.delete(nil)
+    Author.search_authors(top_authors_arr)
+    top_authors_arr
+  end
 end 
 
-a = Scraper.Get_top_topics
-binding.pry
+
+
+
 
 
   

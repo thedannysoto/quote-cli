@@ -34,15 +34,8 @@ class Quote
   end
   
   def self.get_quotes_by_author(author)
+    quote_arr = []
     Scraper.scrape_quotes_by_author(author)
-    arr = Quote.find_quote_by_author(author)
-    table = Terminal::Table.new
-      table.headings = ["Index", "Quote", "Author", "Categories"],
-      table.rows = rows 
-      arr.each_with_index do |quote, index|
-        t << ["#{index}","#{quote.quote}", "#{quote.name}", "#{quote.categories}"]
-        t << :separator
-      end
-      puts table
+    quote_arr = Quote.find_quote_by_author(author)
   end
 end

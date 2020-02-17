@@ -35,33 +35,6 @@ class Scraper
     end
   end
 
-  def self.scrape_author_info(author)
-    scribe = Author.all.find{|a|  a.name == author}
-    page = Nokogiri::HTML(open(scribe.page))
-    author_info = page.css('.subnav-below-p').text
-    auth_arr = author_info.strip!.split(" ")
-    if auth_arr.count == 7
-      scribe.nationality = auth_arr[0]
-      scribe.occupation = auth_arr[2]
-      b_day = "#{auth_arr[4]} #{auth_arr[5]}, #{auth_arr[6]}"
-      scribe.birth_date = b_day
-    elsif auth_arr.count == 8
-      scribe.nationality = auth_arr[0]
-      scribe.occupation = auth_arr[2]
-      b_day = "#{auth_arr[3]} #{auth_arr[4]}"
-      scribe.birth_date = b_day
-      d_day = "#{auth_arr[6]} #{auth_arr[7]}"
-      scribe.death_date = d_day
-    elsif auth_arr.count == 10 
-      scribe.nationality = auth_arr[0]
-      scribe.occupation = auth_arr[2]
-      b_day = "#{auth_arr[3]} #{auth_arr[4]}, #{auth_arr[5]}"
-      scribe.birth_date = b_day
-      d_day = "#{auth_arr[7]} #{auth_arr[8]}, #{auth_arr[9]}"
-      scribe.death_date = d_day
-    end
-  end
-
   def self.scrape_quotes_by_author(author)
     category = []
     category_temp = []
@@ -155,7 +128,7 @@ end
 
 
 
-Author.get_authors_by_letter("e")
+Author.main_menu
 
 
 

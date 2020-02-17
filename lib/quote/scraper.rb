@@ -18,10 +18,7 @@ class Scraper
     num_pages = num_pages.to_i 
     page1.css('tbody tr').each do |item|
       name = item.css('a').text
-      if Author.all.include?(name) == false 
-        author = Author.new(name)
-        author.name = name
-      end 
+      author = Author.search_authors(name)
       href = item.css('a').attr('href').value
       author.page = base_html + href
     end
@@ -31,10 +28,7 @@ class Scraper
       page = Nokogiri::HTML(open(scrape_page))
       page.css('tbody tr').each do |item|
         name = item.css('a').text
-        if Author.all.include?(name) == false 
-        author = Author.new(name)
-        author.name = name
-      end
+        author = Author.search_authors(name)
         href = item.css('a').attr('href').value
         author.page = base_html + href
       end

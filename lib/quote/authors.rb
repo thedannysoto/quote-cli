@@ -32,11 +32,8 @@ class Author
   def self.search_authors(name)
       if @@all_authors.include?(name) == false 
         author = Author.new(name)
-        Scraper.scrape_author_info(name)
-        author
       else
         author = Author.find_author(name)
-        author
       end
   end
   
@@ -54,8 +51,10 @@ class Author
   def self.get_authors_by_letter(letter)
     arr = []
     Scraper.scrape_author_by_letter(letter)
-    Author.find_authors_by_letter(letter).each{|author| arr << author}
-    arr.repeated_combination(25)
+    arr = Author.find_authors_by_letter(letter)
+    arr.first(25).each_with_index do |item, index|
+      puts "#{index + 1} ^^ #{item.name}"
+    end
   end 
   
   def self.get_top_authors

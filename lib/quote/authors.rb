@@ -55,20 +55,7 @@ class Author
     arr = []
     Scraper.scrape_author_by_letter(letter)
     Author.find_authors_by_letter(letter).each{|author| arr << author}
-    Author.all
-    arr.each do |author|
-      author = author.name
-      Scraper.scrape_author_info(author)
-    end
-    table = Terminal::Table.new
-      table.headings = ["number", "Author", "Occupation", "Nationality", "Life-span"], 
-      table.rows = rows 
-      arr.each_with_index do |author, index|
-        t << ["#{index + 1}", "#{author.name}", "#{author.occupation}", "#{author.nationality}", "#{author.birth_date}-#{death_date}"]
-        t << :separator
-      end
-    puts table
-    binding.pry
+    arr.repeated_combination(25)
   end 
   
   def self.get_top_authors

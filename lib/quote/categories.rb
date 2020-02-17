@@ -30,18 +30,10 @@ class Category
       else
         category = Category.find_category(category)
       end
-    end
     category
   end
   
   def self.get_top_topics
     arr = Scraper.scrape_top_topics
-    table = Terminal::Table.new
-      table.headings = ["Number", "Topic"],
-      table.rows = rows
-      arr.each_with_index do |topic, index|
-        t << ["#{index + 1}", "#{topic.category}"]
-        t << :separator
-      end
-      puts table
   end
+end

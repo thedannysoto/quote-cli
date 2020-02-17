@@ -1,4 +1,10 @@
-extend CLI
+require 'pry'
+require 'colorize'
+
+require_relative './quotes.rb'
+require_relative './categories.rb'
+require_relative './scraper.rb'
+require_relative './cli'
 class Author 
   
   @@all_authors = []
@@ -45,7 +51,7 @@ class Author
     author_arr = []
     Scraper.scrape_author_by_letter(letter)
     author_arr = Author.find_authors_by_letter(letter)
-    author_arr
+    return author_arr
   end
     
   def self.get_top_authors

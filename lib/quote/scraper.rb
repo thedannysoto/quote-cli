@@ -1,3 +1,4 @@
+
 require 'nokogiri'
 require 'open-uri'
 require 'pry'
@@ -5,6 +6,7 @@ require 'pry'
 require_relative './quotes.rb'
 require_relative './categories.rb'
 require_relative './authors.rb'
+require_relative './cli.rb'
 
 
 class Scraper
@@ -36,61 +38,50 @@ class Scraper
   end
 
   def self.scrape_quotes_by_author(author)
-    category = []
-    category_temp = []
+    
     scribe = Author.all.find{|a|  a.name == author}
     page = Nokogiri::HTML(open(scribe.page))
     page.css('.m-brick').each do |block|
+      category = []
+      category_temp = []
       quote1 = block.css('a')[0].text
-      if @@quotes_all.include?(quote) == false 
-        quote = Quote.new(quote)
-      end 
+      quote = Quote.search_quotes(quote1)
       author1 = block.css('a')[1].text
-      if @@all_authors.include?(author1) == false 
-        author = Author.new(author1)
-        quote.name = author
-      else
-        quote.name = Author.find(author1)
-      end
+      author = Author.search_authors(author1)
+      quote.author = author
       block.css('.kw-box').css('a').each do |c|
-        cat = c.text
-        category_temp << cat
-        category_temp.each do |topic|
-         category << Category.search_categories(topic)
-        end
+        category_temp << c.text
+      end
+      category_temp.each do |topic|
+       c = Category.search_categories(topic)
+       category << c
+      end
       quote.categories = category
     end
   end
 
   def self.scrape_quotes_by_topic(topic)
+    topic = topic.downcase
     topic_page = "http://brainyquote.com/topics/#{topic}-quotes"
     page = Nokogiri::HTML(open(topic_page))
     page.css('.m-brick').each do |block|
-      quote_temp= []
+      category = []
       category_temp = []
       quote1 = block.css('a')[0].text
-      if @@quotes_all.include?(quote) == false 
-        quote = Quote.new(quote)
-        quote_temp << quote
-      else
-        quote_temp << Quote.find(quote1)
-      end 
+      quote = Quote.search_quotes(quote1)
       author1 = block.css('a')[1].text
-      if @@all_authors.include?(author1) == false 
-        author = Author.new(author1)
-        quote.name = author
-      else
-        quote.name = Author.find(author1)
-      end
+      author = Author.search_authors(author1)
+      quote.author = author
       block.css('.kw-box').css('a').each do |c|
         category = []
         cat = c.text
         category_temp << cat
         category_temp.each do |topic|
-         category << Category.search_categories(topic)
+          c = Category.search_categories(topic)
+          category << c
         end
-      quote.categories = category  
       end
+      quote.categories = category
     end
   end
   
@@ -104,11 +95,11 @@ class Scraper
     end
     top_topics_temp.delete(nil)
     top_topics_temp.each do |topic|
-      top_topics << Category.search_categories(topic)
+      t = Category.search_categories(topic)
+      top_topics << t
     end
     top_topics
   end
-  end 
   
   def self.scrape_top_authors
     top_authors = []
@@ -120,7 +111,8 @@ class Scraper
     end
     top_authors_temp.delete(nil)
     top_authors_temp.each do |author|
-      top_authors << Author.search_authors(author)
+      t = Author.search_authors(author)
+      top_authors << t
     end
     top_authors
   end
@@ -128,7 +120,7 @@ end
 
 
 
-Author.main_menu
+
 
 
 

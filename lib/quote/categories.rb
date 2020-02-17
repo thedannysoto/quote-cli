@@ -1,3 +1,10 @@
+require 'pry'
+require 'colorize'
+
+require_relative './quotes.rb'
+require_relative './scraper.rb'
+require_relative './authors.rb'
+require_relative './cli'
 class Category
   attr_accessor :category
   
@@ -13,15 +20,16 @@ class Category
   end 
   
   def self.find_category(name)
-    @@category_all.select{|a| a.name == name}
+    @@category_all.select{|a| a.category == name}
   end
   
   def self.search_categories(category)
-      if @@category_all.include?(category) == false 
-        category = Category.new(category)
-      else
-        category = Category.find_category(category)
-      end
+    t = @@category_all.find{|a| a.category == category}
+    if t != nil 
+      category = t
+    else
+      category = Category.new(category)
+    end
     category
   end
   
@@ -29,3 +37,4 @@ class Category
     arr = Scraper.scrape_top_topics
   end
 end
+

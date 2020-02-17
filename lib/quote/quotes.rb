@@ -1,10 +1,10 @@
 require 'pry'
-require 'terminal-table'
 require 'colorize'
 
 require_relative './quotes.rb'
 require_relative './categories.rb'
 require_relative './scraper.rb'
+require_relative './authors.rb'
 
 class Quote
   attr_accessor :quote, :categories, :author 
@@ -31,6 +31,15 @@ class Quote
         arr << a
       end
     end
+  end
+  
+  def self.search_quotes(quote)
+      if @@quotes_all.include?(quote) == false 
+        quote1 = Quote.new(quote)
+      else
+        quote1 = Category.find_category(quote)
+      end
+    quote1
   end
   
   def self.get_quotes_by_author(author)

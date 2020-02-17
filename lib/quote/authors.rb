@@ -1,11 +1,3 @@
-require 'pry'
-require 'terminal-table'
-require 'colorize'
-
-require_relative './quotes.rb'
-require_relative './categories.rb'
-require_relative './scraper.rb'
-
 class Author 
   
   @@all_authors = []
@@ -49,26 +41,36 @@ class Author
   end
   
   def self.get_authors_by_letter(letter)
-    arr = []
+    author_arr = []
     Scraper.scrape_author_by_letter(letter)
-    arr = Author.find_authors_by_letter(letter)
-    arr.first(25).each_with_index do |item, index|
-      puts "#{index + 1} ^^ #{item.name}"
+    start = 0 
+    stop = 24
+    answer = 1
+    while answer == 1  
+      Author.all[start..stop].each_with_index do |author, index|
+        puts "#{index + 1}| #{author.name}"
+      end
+      puts "Would you like to see 25 more? /n Enter 1 for more or 2 to stop."
+      a = gets.chomp
+      if a == "1"
+        start += 25
+        stop +=25
+        answer = 1
+      elsif a != "1"
+        puts "You have stopped."
+        answer = 2
+      end
+      answer
     end
+
+    
   end 
   
   def self.get_top_authors
     arr = Scraper.scrape_top_authors
-    arr.each do |author|
-      Scraper.scrape_author_info(author)
-    end
-    table = Terminal::Table.new
-      table.headings = ["number", "Author", "Occupation", "Nationality", "Life-span"]
-      table.rows = rows
-      arr.each_with_index do |author, index|
-        t << ["#{index + 1}", "#{author.name}", "#{author.occupation}", "#{author.nationality}", "#{author.birth_date}-#{death_date}"]
-        t << :separator
-      end
-    puts table
+    
   end
 end 
+
+
+

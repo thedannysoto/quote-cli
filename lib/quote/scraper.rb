@@ -154,9 +154,8 @@ class Scraper
 end 
 
 
-a = Author.get_authors_by_letter("a")
 
-
+Author.get_authors_by_letter("e")
 
 
 

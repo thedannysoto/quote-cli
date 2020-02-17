@@ -1,11 +1,3 @@
-require 'pry'
-require 'terminal-table'
-require 'colorize'
-
-require_relative './quotes.rb'
-require_relative './categories.rb'
-require_relative './scraper.rb'
-
 class Category
   attr_accessor :category
   
